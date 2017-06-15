@@ -1,8 +1,10 @@
+# Main library used for natural language processing (natural language toolkit)
 import nltk
-# from nltk import ne_chunk, pos_tag, word_tokenize
-# from nltk.tree import Tree
+# Download all basic corpora and library as used in the book
+# nltk.download('book')
 
-def get_continuous_chunks(text):
+# Function to eliminate unnecessary things like '(', ')', ',', etc
+def text_preprocessing(text):
     # This is used to parse betweens sentences
     sentences = nltk.sent_tokenize(text)
 
@@ -21,6 +23,10 @@ def get_continuous_chunks(text):
     # Debugging
     # print(tagged_sentences)
 
+    return tagged_sentences
+
+# Function to return tagged text from processed text
+def text_ner_tagging(tagged_sentences):
     # This is used to do NER tagging for each word
     # Binary = True means it will only detect whether a word has named entity
     # Binary = False means it will also detect the class of a word which has named entity
@@ -36,6 +42,7 @@ def get_continuous_chunks(text):
     inside_chunked_sentences = chunked_sentences[0]
     iterator_1 = 0
 
+    #Loop through all the words
     while(iterator_1 < len(inside_chunked_sentences)):
         # Debugging
         # print(inside_chunked_sentences[iterator_1])
@@ -44,17 +51,60 @@ def get_continuous_chunks(text):
         if (type(inside_chunked_sentences[iterator_1]) == nltk.tree.Tree):
             # Later check for case there is 'of' between named entity (between Tree)
             # e.g. United States of America
+            whole_word = ""
             while(type(inside_chunked_sentences[iterator_1]) == nltk.tree.Tree):
                 # If it is a named entity, add the right label/class to the tuple
-                processed_list.append([inside_chunked_sentences[iterator_1][0][0], inside_chunked_sentences[iterator_1].label()])
+                # Belom di gabung, harusnya digabung jadi satu item
+                # processed_list.append([inside_chunked_sentences[iterator_1][0][0], inside_chunked_sentences[iterator_1].label()])
+                whole_word += inside_chunked_sentences[iterator_1][0][0]
+
+                # Debugging
+                # print('To NER : ', inside_chunked_sentences[iterator_1][0][0])
+
                 iterator_1 = iterator_1 + 1
+
+        processed_list.append([whole_word, inside_chunked_sentences[iterator_1-1].label()])
 
         # If it is not a named entity, add None label to the tuple
         processed_list.append([inside_chunked_sentences[iterator_1][0], None])
 
+        # Debugging
+        # print('To other : ', inside_chunked_sentences[iterator_1][0])
+
         iterator_1 = iterator_1 + 1
 
-    print(processed_list)
+    # NOTES
+    # Alternative : Detect all nouns, manually tag the named entity
 
-txt = "Barack Obama is a great person in United States of America and Great BritainHe is truly our president."
-chunked = get_continuous_chunks(txt)
+    # Debugging
+    # print(processed_list)
+
+    return processed_list
+
+# Function to do text anonymization based on parameter supplied
+def text_anonymization(processed_list, anonymization_type):
+    return 'to be defined'
+
+if __name__ == "__main__":
+    # Text input from stdio
+    text = raw_input()
+
+    if (text == 'default'):
+        # text = "Barack Obama is a great person in United States of America and Great Britain. He is truly our president."
+        # Bugs here
+        text = "Cristiano Ronaldo is a decent footballer both in Spain (Real Madrid) and United Kingdom (Manchester United). He is truly a masterpiece."
+        # text = "Cristiano Ronaldo is a decent footballer both in Real Madrid, Spain and Manchester United, Great Britain. He is truly a masterpiece."
+
+    tagged_sentences = text_preprocessing(text)
+
+    # Debugging
+    # for sentence in tagged_sentences:
+    #     for word in sentence:
+    #         print(word)
+    #     print('Next sentence : ')
+
+    processed_list = text_ner_tagging(tagged_sentences)
+
+    # Debugging
+    for item in processed_list:
+        print(item)
