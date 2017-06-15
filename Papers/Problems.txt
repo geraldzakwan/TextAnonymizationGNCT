@@ -1,0 +1,26 @@
+---
+NER tagging is not accurate :
+
+# NOTES
+# Alternative : Detect all nouns, manually tag the named entity
+
+e.g. : Manchester United considered as PERSON
+
+---
+Small bugs, space included. But it's OK too.
+
+e.g. :
+['Cristiano Ronaldo ', 'PERSON']
+['is', None]
+['', 'None']
+['a', None]
+['', 'None']
+['decent', None]
+
+--- DONE
+---
+there are trees with more than one node (NP-chunked)
+
+need to handle
+
+e.g. : Tree('ORGANIZATION', [('Real', 'NNP'), ('Madrid', 'NNP')])
