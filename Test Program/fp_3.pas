@@ -1,3 +1,0 @@
-  program fakprim;
-  var
-    n, 

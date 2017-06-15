@@ -63,6 +63,7 @@ def text_ner_tagging(tagged_sentences):
 
                 iterator_1 = iterator_1 + 1
 
+        print(inside_chunked_sentences[iterator_1-1]);
         processed_list.append([whole_word, inside_chunked_sentences[iterator_1-1].label()])
 
         # If it is not a named entity, add None label to the tuple
