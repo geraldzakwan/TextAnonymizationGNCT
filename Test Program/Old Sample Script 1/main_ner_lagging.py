@@ -8,20 +8,11 @@ def text_preprocessing(text):
     # This is used to parse betweens sentences
     sentences = nltk.sent_tokenize(text)
 
-    # Debugging
-    # print(sentences)
-
     # This is used to parse between words in each sentence
     tokenized_sentences = [nltk.word_tokenize(sentence) for sentence in sentences]
 
-    # Debugging
-    # print(tokenized_sentences)
-
     # This is used to do post tagging for each word
     tagged_sentences = [nltk.pos_tag(word) for word in tokenized_sentences]
-
-    # Debugging
-    # print(tagged_sentences)
 
     return tagged_sentences
 
@@ -33,7 +24,7 @@ def text_ner_tagging(tagged_sentences):
     chunked_sentences = [nltk.ne_chunk(word, binary=False) for word in tagged_sentences]
 
     # Debugging
-    print(chunked_sentences)
+    # print(chunked_sentences)
 
     # This will be the output of NER processing
     processed_list = []
@@ -42,11 +33,11 @@ def text_ner_tagging(tagged_sentences):
     inside_chunked_sentences = chunked_sentences[0]
     iterator_1 = 0
 
-    #Loop through all the words
+    # Loop through all the words
     while(iterator_1 < len(inside_chunked_sentences)):
-        # Debugging
-        # print(inside_chunked_sentences[iterator_1])
 
+        # This is to handle if there are consecutive trees
+        # whole_label still need to be fixed, don't group if label is different
         whole_word = ""
         whole_label = "None"
 
@@ -88,58 +79,21 @@ def text_ner_tagging(tagged_sentences):
 
                 iterator_1 = iterator_1 + 1
 
-
+        iterator_1 = iterator_1 - 1
+        
         if (is_tree):
             processed_list.append([whole_word, whole_label])
-
-        # Debugging
-        # print('DELIMITER CHUNK')
-
-        # print(inside_chunked_sentences[iterator_1-1]);
-        # processed_list.append([whole_word, inside_chunked_sentences[iterator_1-1].label()])
-
-        # If it is not a named entity, add None label to the tuple
-        processed_list.append([inside_chunked_sentences[iterator_1][0], None])
-
-        # Debugging
-        # print('To other : ', inside_chunked_sentences[iterator_1][0])
+        else:
+            # If it is not a named entity, add None label to the tuple
+            processed_list.append([inside_chunked_sentences[iterator_1][0], None])
 
         iterator_1 = iterator_1 + 1
-
-    # NOTES
-    # Alternative : Detect all nouns, manually tag the named entity
-
-    # Debugging
-    # print(processed_list)
 
     return processed_list
 
 # Function to do text anonymization based on parameter supplied
 def text_anonymization(processed_list, anonymization_type):
-    if(anonymization_type == 'general'):
-        list_len = len(processed_list)
-        i = 0
-        count_person = 0;
-        count_organization = 0;
-        count_gpe = 0;
-
-        while(i < list_len):
-            if(processed_list[i][1] != 'None'):
-                if(processed_list[i][1] == 'PERSON'):
-                    count_person = count_person + 1
-                    processed_list[i][0] = 'PERSON' + '-' + str(count_person)
-                elif(processed_list[i][1] == 'ORGANIZATION'):
-                    count_organization = count_organization + 1
-                    processed_list[i][0] = 'ORG' + '-' + str(count_organization)
-                elif(processed_list[i][1] == 'GPE'):
-                    count_gpe = count_gpe + 1
-                    processed_list[i][0] = 'GPE' + '-' + str(count_gpe)
-
-            i = i + 1
-
-        return processed_list
-    else:
-        return 'to be defined'
+    return 'to be defined'
 
 if __name__ == "__main__":
     # Text input from stdio
@@ -149,9 +103,8 @@ if __name__ == "__main__":
         # text = "Barack Obama is a great person in United States of America and Great Britain. He is truly our president."
         # Bugs here
         # text = "Cristiano Ronaldo is a decent footballer both in Spain (Real Madrid) and United Kingdom (Manchester United). He is truly a masterpiece."
-        # text = "Cristiano Ronaldo is a decent footballer both in Real Madrid, Spain and Manchester United, Great Britain. He is truly a masterpiece."
+        text = "Cristiano Ronaldo is a decent footballer both in Real Madrid, Spain and Manchester United, Great Britain. He is truly a masterpiece."
         # text = "Cristiano Ronaldo is a decent footballer both in Real Madrid."
-        text = "Cristiano Ronaldo is a decent footballer both in Real Madrid, Spain and Manchester United, United Kingdom. He is truly a masterpiece."
 
     tagged_sentences = text_preprocessing(text)
 
@@ -164,11 +117,5 @@ if __name__ == "__main__":
     processed_list = text_ner_tagging(tagged_sentences)
 
     # Debugging
-    # for item in processed_list:
-    #     print(item)
-
-    anonymized_list = text_anonymization(processed_list, 'general')
-
-    # Debugging
-    for item in anonymized_list:
+    for item in processed_list:
         print(item)
