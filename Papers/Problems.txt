@@ -1,4 +1,12 @@
 ---
+Space ngk cukup buat GMB
+
+Either :
+
+1. Cari cara buat gedein space di ubuntu
+2. Ambil file en.tags doang
+
+---
 NER tagging is not accurate :
 
 # NOTES
