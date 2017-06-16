@@ -33,7 +33,7 @@ def text_ner_tagging(tagged_sentences):
     chunked_sentences = [nltk.ne_chunk(word, binary=False) for word in tagged_sentences]
 
     # Debugging
-    print(chunked_sentences)
+    # print(chunked_sentences)
 
     # This will be the output of NER processing
     processed_list = []
@@ -164,11 +164,11 @@ if __name__ == "__main__":
     processed_list = text_ner_tagging(tagged_sentences)
 
     # Debugging
-    # for item in processed_list:
-    #     print(item)
+    for item in processed_list:
+        print(item)
 
     anonymized_list = text_anonymization(processed_list, 'general')
 
     # Debugging
-    for item in anonymized_list:
-        print(item)
+    # for item in anonymized_list:
+    #     print(item)
