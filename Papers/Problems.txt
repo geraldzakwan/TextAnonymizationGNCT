@@ -17,6 +17,9 @@ e.g. :
 ['', 'None']
 ['decent', None]
 
+---
+Perlu pake IOB format ngk? Keknya gausah kalo udh diproses, mungkin rapihin ntar
+
 --- DONE
 ---
 there are trees with more than one node (NP-chunked)

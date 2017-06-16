@@ -1,0 +1,3 @@
+http://nlpforhackers.io/named-entity-extraction/
+
+http://nlpforhackers.io/training-ner-large-dataset/
