@@ -1,12 +1,4 @@
 ---
-Space ngk cukup buat GMB
-
-Either :
-
-1. Cari cara buat gedein space di ubuntu
-2. Ambil file en.tags doang
-
----
 NER tagging is not accurate :
 
 # NOTES
@@ -15,8 +7,11 @@ NER tagging is not accurate :
 e.g. : Manchester United considered as PERSON
 
 ---
-Small bugs, space included. But it's OK too.
+Perlu pake IOB format dan NP chunking ngk? Keknya gausah kalo udh diproses, mungkin rapihin ntar
 
+---
+
+Small bugs, space included. But it's OK too.
 e.g. :
 ['Cristiano Ronaldo ', 'PERSON']
 ['is', None]
@@ -25,8 +20,16 @@ e.g. :
 ['', 'None']
 ['decent', None]
 
+
+
+--- DONE pake opsi dua
 ---
-Perlu pake IOB format ngk? Keknya gausah kalo udh diproses, mungkin rapihin ntar
+Space ngk cukup buat GMB
+
+Either :
+
+1. Cari cara buat gedein space di ubuntu
+2. Ambil file en.tags doang
 
 --- DONE
 ---
