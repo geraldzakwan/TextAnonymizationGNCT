@@ -4,15 +4,25 @@ NER tagging is not accurate :
 # NOTES
 # Alternative : Detect all nouns, manually tag the named entity
 
-e.g. : Manchester United considered as PERSON
+e.g. : Manchester United considered as PERSON (NOW is solved)
 
 Current solution : Training GMB corpus dataset
+
+
+---
+Do some post post processing
+Setelah di run, ada beberapa kesalahan, contohnya :
+
+word 'and' kan CC, harusnya mah nggak jadi organization
+jadi kalo dia tag-nya CC, jadiin 'O/outside'
+
+
 
 ---
 Person replacement : Kalo mau niat, cowo di replace cewe dan sebaliknya
 
 ---
-Small bugs, space included. But it's OK too.
+Small bugs, space included. But it's OK too. Kalo pake yang chunker sendiri yang main_ner_2.py
 e.g. :
 ['Cristiano Ronaldo ', 'PERSON']
 ['is', None]
