@@ -29,6 +29,8 @@ def to_conll_iob(annotated_sentence):
     return proper_iob_tokens
 
 def read_corpus(corpus_root_param, mode):
+    ret_list = []
+
     # Create collections.Counter structure data
     # It is basically to count occurence of the words
     ner_count = collections.Counter()
@@ -45,6 +47,8 @@ def read_corpus(corpus_root_param, mode):
     sum_file_size = 0
     # Exit point
     exit = False
+    # Iterator
+    it = 0
 
     #Iterate through all the files
     for root, dirs, files in os.walk(corpus_root):
@@ -106,7 +110,20 @@ def read_corpus(corpus_root_param, mode):
 
                         # Make it NLTK Classifier compatible - [(w1, t1, iob1), ...] to [((w1, t1), iob1), ...]
                         # Because the classfier expects a tuple as input, first item input, second the class
-                        yield [((w, t), iob) for w, t, iob in conll_tokens]
+                        tuple_to_be_inserted = [((w, t), iob) for w, t, iob in conll_tokens]
+                        ret_list.append(tuple_to_be_inserted)
+
+                        # Debugging
+                        it = it + 1
+                        print(it)
+                        # print('-----------------------------------------------------------')
+                        # print('-----------------------------------------------------------')
+                        # print(tuple_to_be_inserted)
+                        # print('-----------------------------------------------------------')
+                        # print('-----------------------------------------------------------')
+
+                        # Using generator, not recommended
+                        # yield [((w, t), iob) for w, t, iob in conll_tokens]
 
             # if (count_tag_file >= 5):
             #     exit = True;
@@ -138,7 +155,10 @@ def read_corpus(corpus_root_param, mode):
     # print "Total words which have named entity : ", sum(ner_tags.values())
     # 1354149
 
-# reader = read_corpus(corpus_root)
+    return ret_list
+
+# reader = read_corpus(corpus_root, '--core')
+# print(reader)
 
 # Debugging
 # for i in range(0, 10):

@@ -1,16 +1,18 @@
 import pickle
+import feature
 from collections import Iterable
 from nltk.tag import ClassifierBasedTagger
 from nltk.chunk import ChunkParserI
+from nltk.chunk import conlltags2tree, tree2conlltags
 
 class NamedEntityChunker(ChunkParserI):
     def __init__(self, train_sents, **kwargs):
         assert isinstance(train_sents, Iterable)
 
-        self.feature_detector = features
+        self.feature_detector = feature.features
         self.tagger = ClassifierBasedTagger(
             train=train_sents,
-            feature_detector=features,
+            feature_detector=feature.features,
             **kwargs
         )
 
