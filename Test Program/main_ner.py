@@ -118,27 +118,27 @@ def text_ner_tagging(tagged_sentences):
 def text_anonymization(processed_list, anonymization_type):
     return 'to be defined'
 
-if __name__ == "__main__":
-    # Text input from stdio
-    text = raw_input()
-
-    if (text == 'default'):
-        # text = "Barack Obama is a great person in United States of America and Great Britain. He is truly our president."
-        # Bugs here
-        # text = "Cristiano Ronaldo is a decent footballer both in Spain (Real Madrid) and United Kingdom (Manchester United). He is truly a masterpiece."
-        text = "Cristiano Ronaldo is a decent footballer both in Real Madrid, Spain and Manchester United, Great Britain. He is truly a masterpiece."
-        # text = "Cristiano Ronaldo is a decent footballer both in Real Madrid."
-
-    tagged_sentences = text_preprocessing(text)
-
-    # Debugging
-    # for sentence in tagged_sentences:
-    #     for word in sentence:
-    #         print(word)
-    #     print('Next sentence : ')
-
-    processed_list = text_ner_tagging(tagged_sentences)
-
-    # Debugging
-    for item in processed_list:
-        print(item)
+# if __name__ == "__main__":
+#     # Text input from stdio
+#     text = raw_input()
+#
+#     if (text == 'default'):
+#         # text = "Barack Obama is a great person in United States of America and Great Britain. He is truly our president."
+#         # Bugs here
+#         # text = "Cristiano Ronaldo is a decent footballer both in Spain (Real Madrid) and United Kingdom (Manchester United). He is truly a masterpiece."
+#         text = "Cristiano Ronaldo is a decent footballer both in Real Madrid, Spain and Manchester United, Great Britain. He is truly a masterpiece."
+#         # text = "Cristiano Ronaldo is a decent footballer both in Real Madrid."
+#
+#     tagged_sentences = text_preprocessing(text)
+#
+#     # Debugging
+#     # for sentence in tagged_sentences:
+#     #     for word in sentence:
+#     #         print(word)
+#     #     print('Next sentence : ')
+#
+#     processed_list = text_ner_tagging(tagged_sentences)
+#
+#     # Debugging
+#     for item in processed_list:
+#         print(item)

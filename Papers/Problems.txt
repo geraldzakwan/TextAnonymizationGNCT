@@ -6,11 +6,12 @@ NER tagging is not accurate :
 
 e.g. : Manchester United considered as PERSON
 
----
-Perlu pake IOB format dan NP chunking ngk? Keknya gausah kalo udh diproses, mungkin rapihin ntar
+Current solution : Training GMB corpus dataset
 
 ---
+Person replacement : Kalo mau niat, cowo di replace cewe dan sebaliknya
 
+---
 Small bugs, space included. But it's OK too.
 e.g. :
 ['Cristiano Ronaldo ', 'PERSON']
@@ -19,6 +20,9 @@ e.g. :
 ['a', None]
 ['', 'None']
 ['decent', None]
+
+---
+Perlu pake IOB format dan NP chunking ngk? Keknya gausah kalo udh diproses, mungkin rapihin ntar
 
 
 
