@@ -23,8 +23,10 @@ def train_perceptron():
                    'B-geo', 'I-geo', 'B-org', 'I-org', 'B-tim', 'I-tim',
                    'B-art', 'I-art', 'B-eve', 'I-eve', 'B-nat', 'I-nat']
 
-    pa_ner = ne_chunker.NamedEntityChunker.train(itertools.islice(reader, 2000), feature_detector=feature.ner_features,
-                                                   all_classes=all_classes, batch_size=1000, n_iter=5)
+    # pa_ner = ne_chunker.NamedEntityChunker.train(itertools.islice(reader, 2000), feature_detector=feature.ner_features,
+    #                                                all_classes=all_classes, batch_size=1000, n_iter=5)
+
+    pa_ner = ne_chunker.NamedEntityChunker.load(feature.ner_features)
 
     text = "Cristiano Ronaldo is a decent footballer both in Real Madrid, Spain and Manchester United, United Kingdom. He is truly a masterpiece."
     print(pa_ner.parse(pos_tag(word_tokenize(text))))

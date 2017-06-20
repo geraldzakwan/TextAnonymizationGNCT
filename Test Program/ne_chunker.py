@@ -7,6 +7,8 @@ from sklearn.feature_extraction import DictVectorizer
 from sklearn.pipeline import Pipeline
 from nltk.chunk import conlltags2tree, tree2conlltags
 
+from sklearn.externals import joblib
+
 class NamedEntityChunker(ChunkParserI):
 
     @classmethod
@@ -36,6 +38,11 @@ class NamedEntityChunker(ChunkParserI):
         X, y = cls.to_dataset(batch, feature_detector)
         return X, y
 
+    # @classmethod
+    # def load(cls, feature_detector):
+    #     loaded_clf = joblib.load('test_model')
+    #     return cls(loaded_clf, feature_detector)
+
     @classmethod
     def train(cls, parsed_sentences, feature_detector, all_classes, **kwargs):
         X, y = cls.get_minibatch(parsed_sentences, feature_detector, kwargs.get('batch_size', 500))
@@ -54,6 +61,13 @@ class NamedEntityChunker(ChunkParserI):
             ('classifier', clf)
         ])
 
+        joblib.dump(clf, 'test_model', compress = 9)
+
+        return cls(clf, feature_detector)
+
+    @classmethod
+    def load(cls, feature_detector, **kwargs):
+        clf = joblib.load('test_model')
         return cls(clf, feature_detector)
 
     def __init__(self, classifier, feature_detector):
