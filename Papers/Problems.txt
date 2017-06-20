@@ -1,4 +1,7 @@
 ---
+Cannot check accuracy for big dataset (success for 1000, failed for 5000)
+
+---
 NER tagging is not accurate :
 
 # NOTES
@@ -33,7 +36,6 @@ e.g. :
 
 ---
 Perlu pake IOB format dan NP chunking ngk? Keknya gausah kalo udh diproses, mungkin rapihin ntar
-
 
 
 --- DONE pake opsi dua
