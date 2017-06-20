@@ -1,5 +1,6 @@
 ---
 Cannot check accuracy for big dataset (success for 1000, failed for 5000)
+It will cause memory error
 
 ---
 NER tagging is not accurate :
