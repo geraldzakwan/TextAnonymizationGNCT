@@ -3,7 +3,7 @@ import ne_chunker
 import corpus
 import feature
 
-# from nltk import pos_tag, word_tokenize
+from nltk import pos_tag, word_tokenize
 # from nltk.chunk import conlltags2tree, tree2conlltags
 
 from nltk import tree2conlltags
@@ -23,11 +23,15 @@ def train_perceptron():
                    'B-geo', 'I-geo', 'B-org', 'I-org', 'B-tim', 'I-tim',
                    'B-art', 'I-art', 'B-eve', 'I-eve', 'B-nat', 'I-nat']
 
-    pa_ner = ne_chunker.NamedEntityChunker.train(itertools.islice(reader, 50000), feature_detector=feature.ner_features,
+    pa_ner = ne_chunker.NamedEntityChunker.train(itertools.islice(reader, 2000), feature_detector=feature.ner_features,
                                                    all_classes=all_classes, batch_size=1000, n_iter=5)
 
-    accuracy = pa_ner.score(itertools.islice(reader, 1000))
+    text = "Cristiano Ronaldo is a decent footballer both in Real Madrid, Spain and Manchester United, United Kingdom. He is truly a masterpiece."
+    print(pa_ner.parse(pos_tag(word_tokenize(text))))
 
-    print "Accuracy:", accuracy # 0.970327096314
+    # accuracy = pa_ner.score(itertools.islice(reader, 1000))
+    #
+    # print "Accuracy:", accuracy
+    # 0.970327096314
 
 train_perceptron()

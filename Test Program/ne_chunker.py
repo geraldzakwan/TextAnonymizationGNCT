@@ -5,6 +5,7 @@ from nltk.chunk import ChunkParserI
 from sklearn.linear_model import Perceptron
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.pipeline import Pipeline
+from nltk.chunk import conlltags2tree, tree2conlltags
 
 class NamedEntityChunker(ChunkParserI):
 
