@@ -11,6 +11,7 @@ from nltk.chunk import ChunkParserI
 from sklearn.linear_model import Perceptron
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.pipeline import Pipeline
+from sklearn.externals import joblib
 
 # The path to the used corpus, here I used large dataset corpus named Groningen Meaning Bank
 corpus_root = 'gmb-2.2.0'
@@ -19,15 +20,18 @@ mode = '--core'
 # Generator result
 reader = corpus.read_corpus_ner(corpus_root, mode)
 
-def train_perceptron():
+def train_perceptron(sample):
     all_classes = ['O', 'B-per', 'I-per', 'B-gpe', 'I-gpe',
                    'B-geo', 'I-geo', 'B-org', 'I-org', 'B-tim', 'I-tim',
                    'B-art', 'I-art', 'B-eve', 'I-eve', 'B-nat', 'I-nat']
 
-    pa_ner = ne_chunker.NamedEntityChunker.train(itertools.islice(reader, 2000), feature_detector=feature.ner_features,
+    pa_ner = ne_chunker.NamedEntityChunker.train(itertools.islice(reader, sample), feature_detector=feature.ner_features,
                                                    all_classes=all_classes, batch_size=1000, n_iter=5)
 
     return pa_ner
+
+def save_perceptron(cls, model_name):
+    joblib.dump(cls, model_name, compress=9)
 
 def load_perceptron(model_name):
     pa_ner = ne_chunker.NamedEntityChunker.load(model_name, feature.ner_features)
