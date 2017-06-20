@@ -38,10 +38,10 @@ class NamedEntityChunker(ChunkParserI):
         X, y = cls.to_dataset(batch, feature_detector)
         return X, y
 
-    # @classmethod
-    # def load(cls, feature_detector):
-    #     loaded_clf = joblib.load('test_model')
-    #     return cls(loaded_clf, feature_detector)
+    @classmethod
+    def load(cls, model_name, feature_detector, **kwargs):
+        clf = joblib.load(model_name)
+        return cls(clf, feature_detector)
 
     @classmethod
     def train(cls, parsed_sentences, feature_detector, all_classes, **kwargs):
@@ -63,11 +63,6 @@ class NamedEntityChunker(ChunkParserI):
 
         joblib.dump(clf, 'test_model', compress = 9)
 
-        return cls(clf, feature_detector)
-
-    @classmethod
-    def load(cls, feature_detector, **kwargs):
-        clf = joblib.load('test_model')
         return cls(clf, feature_detector)
 
     def __init__(self, classifier, feature_detector):
