@@ -1,27 +1,33 @@
+import itertools
 import ne_chunker
 import corpus
-from nltk import pos_tag, word_tokenize
-from nltk.chunk import conlltags2tree, tree2conlltags
+import feature
+
+# from nltk import pos_tag, word_tokenize
+# from nltk.chunk import conlltags2tree, tree2conlltags
+
+from nltk import tree2conlltags
+from nltk.chunk import ChunkParserI
+from sklearn.linear_model import Perceptron
+from sklearn.feature_extraction import DictVectorizer
+from sklearn.pipeline import Pipeline
 
 # The path to the used corpus, here I used large dataset corpus named Groningen Meaning Bank
 corpus_root = 'gmb-2.2.0'
 mode = '--core'
 
-data = corpus.read_corpus(corpus_root, mode)
+def train_perceptron():
+    reader = corpus.read_corpus_ner(corpus_root, mode)
 
-training_samples = data[:int(len(data) * 0.9)]
-test_samples = data[int(len(data) * 0.9):]
+    all_classes = ['O', 'B-per', 'I-per', 'B-gpe', 'I-gpe',
+                   'B-geo', 'I-geo', 'B-org', 'I-org', 'B-tim', 'I-tim',
+                   'B-art', 'I-art', 'B-eve', 'I-eve', 'B-nat', 'I-nat']
 
-print "#training samples = %s" % len(training_samples)    # training samples = 55809
-print "#test samples = %s" % len(test_samples)                # test samples = 6201
+    pa_ner = ne_chunker.NamedEntityChunker.train(itertools.islice(reader, 50000), feature_detector=feature.ner_features,
+                                                   all_classes=all_classes, batch_size=5000, n_iter=5)
 
-chunker = ne_chunker.NamedEntityChunker(training_samples[:55809])
-# text = "Cristiano Ronaldo is a decent footballer both in Real Madrid, Spain and Manchester United, United Kingdom. He is truly a masterpiece."
-text = "Geraldi Dzakwan wakes up at 7 am every morning."
-print chunker.parse(pos_tag(word_tokenize(text)))
+    accuracy = pa_ner.score(itertools.islice(reader, 5000))
 
-score = chunker.evaluate([conlltags2tree([(w, t, iob) for (w, t), iob in iobs]) for iobs in test_samples[:500]])
+    print "Accuracy:", accuracy # 0.970327096314
 
-# Debugging
-print score.accuracy()
-# 0.931132334092
+train_perceptron()

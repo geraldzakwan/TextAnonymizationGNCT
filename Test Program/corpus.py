@@ -1,6 +1,7 @@
 import os
 import sys
 import collections
+from nltk import conlltags2tree
 
 def to_conll_iob(annotated_sentence):
     """
@@ -22,7 +23,7 @@ def to_conll_iob(annotated_sentence):
         proper_iob_tokens.append((tag, word, ner))
     return proper_iob_tokens
 
-def read_corpus(corpus_root, mode):
+def read_corpus_ner(corpus_root, mode):
     ret_list = []
 
     # Create collections.Counter structure data
@@ -88,8 +89,9 @@ def read_corpus(corpus_root, mode):
                                     ner = ner.split('-')[0]
 
                                 # Make it NLTK compatible
-                                if pos_tag in ('LQU', 'RQU'):
-                                    pos_tag = "``"
+                                # Doesn't need it anymore since we're going to use scikit learn
+                                # if pos_tag in ('LQU', 'RQU'):
+                                #     pos_tag = "``"
 
                                 standard_form_tokens.append((word, pos_tag, ner))
 
@@ -102,13 +104,18 @@ def read_corpus(corpus_root, mode):
 
                         conll_tokens = to_conll_iob(standard_form_tokens)
 
+                        # This is to return list
                         # Make it NLTK Classifier compatible - [(w1, t1, iob1), ...] to [((w1, t1), iob1), ...]
                         # Because the classfier expects a tuple as input, first item input, second the class
-                        tuple_to_be_inserted = [((w, t), iob) for w, t, iob in conll_tokens]
-                        ret_list.append(tuple_to_be_inserted)
+                        # tuple_to_be_inserted = [((w, t), iob) for w, t, iob in conll_tokens]
+                        # ret_list.append(tuple_to_be_inserted)
+
+                        # This is to use generator
+                        yield conlltags2tree(conll_tokens)
 
                         # Debugging
                         it = it + 1
                         print(it)
 
-    return ret_list
+    # This is to return list
+    # return ret_list

@@ -1,19 +1,46 @@
 import string
+import re
 from nltk.stem.snowball import SnowballStemmer
 
-def features(tokens, index, history):
+stemmer = SnowballStemmer('english')
+
+def shape(word):
+    word_shape = 'other'
+    if re.match('[0-9]+(\.[0-9]*)?|[0-9]*\.[0-9]+$', word):
+        word_shape = 'number'
+    elif re.match('\W+$', word):
+        word_shape = 'punct'
+    elif re.match('[A-Z][a-z]+$', word):
+        word_shape = 'capitalized'
+    elif re.match('[A-Z]+$', word):
+        word_shape = 'uppercase'
+    elif re.match('[a-z]+$', word):
+        word_shape = 'lowercase'
+    elif re.match('[A-Z][a-z]+[A-Z][a-z]+[A-Za-z]*$', word):
+        word_shape = 'camelcase'
+    elif re.match('[A-Za-z]+$', word):
+        word_shape = 'mixedcase'
+    elif re.match('__.+__$', word):
+        word_shape = 'wildcard'
+    elif re.match('[A-Za-z0-9]+\.$', word):
+        word_shape = 'ending-dot'
+    elif re.match('[A-Za-z0-9]+\.[A-Za-z0-9\.]+\.$', word):
+        word_shape = 'abbreviation'
+    elif re.match('[A-Za-z0-9]+\-[A-Za-z0-9\-]+.*$', word):
+        word_shape = 'contains-hyphen'
+
+    return word_shape
+
+def ner_features(tokens, index, history):
     """
     `tokens`  = a POS-tagged sentence [(w1, t1), ...]
     `index`   = the index of the token we want to extract features for
     `history` = the previous predicted IOB tags
     """
 
-    # init the stemmer
-    stemmer = SnowballStemmer('english')
-
     # Pad the sequence with placeholders
-    tokens = [('[START2]', '[START2]'), ('[START1]', '[START1]')] + list(tokens) + [('[END1]', '[END1]'), ('[END2]', '[END2]')]
-    history = ['[START2]', '[START1]'] + list(history)
+    tokens = [('__START2__', '__START2__'), ('__START1__', '__START1__')] + list(tokens) + [('__END1__', '__END1__'), ('__END2__', '__END2__')]
+    history = ['__START2__', '__START1__'] + list(history)
 
     # shift the index with 2, to accommodate the padding
     index += 2
@@ -23,51 +50,36 @@ def features(tokens, index, history):
     prevprevword, prevprevpos = tokens[index - 2]
     nextword, nextpos = tokens[index + 1]
     nextnextword, nextnextpos = tokens[index + 2]
-    previob = history[index - 1]
-    contains_dash = '-' in word
-    contains_dot = '.' in word
-    allascii = all([True for c in word if c in string.ascii_lowercase])
+    previob = history[-1]
+    prevpreviob = history[-2]
 
-    allcaps = word == word.capitalize()
-    capitalized = word[0] in string.ascii_uppercase
-
-    prevallcaps = prevword == prevword.capitalize()
-    prevcapitalized = prevword[0] in string.ascii_uppercase
-
-    nextallcaps = prevword == prevword.capitalize()
-    nextcapitalized = prevword[0] in string.ascii_uppercase
-
-    return {
+    feat_dict = {
         'word': word,
         'lemma': stemmer.stem(word),
         'pos': pos,
-        'all-ascii': allascii,
+        'shape': shape(word),
 
         'next-word': nextword,
-        'next-lemma': stemmer.stem(nextword),
         'next-pos': nextpos,
+        'next-lemma': stemmer.stem(nextword),
+        'next-shape': shape(nextword),
 
         'next-next-word': nextnextword,
-        'nextnextpos': nextnextpos,
+        'next-next-pos': nextnextpos,
+        'next-next-lemma': stemmer.stem(nextnextword),
+        'next-next-shape': shape(nextnextword),
 
         'prev-word': prevword,
-        'prev-lemma': stemmer.stem(prevword),
         'prev-pos': prevpos,
+        'prev-lemma': stemmer.stem(prevword),
+        'prev-iob': previob,
+        'prev-shape': shape(prevword),
 
         'prev-prev-word': prevprevword,
         'prev-prev-pos': prevprevpos,
-
-        'prev-iob': previob,
-
-        'contains-dash': contains_dash,
-        'contains-dot': contains_dot,
-
-        'all-caps': allcaps,
-        'capitalized': capitalized,
-
-        'prev-all-caps': prevallcaps,
-        'prev-capitalized': prevcapitalized,
-
-        'next-all-caps': nextallcaps,
-        'next-capitalized': nextcapitalized,
+        'prev-prev-lemma': stemmer.stem(prevprevword),
+        'prev-prev-iob': prevpreviob,
+        'prev-prev-shape': shape(prevprevword),
     }
+
+    return feat_dict
