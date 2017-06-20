@@ -119,3 +119,6 @@ def read_corpus_ner(corpus_root, mode):
 
     # This is to return list
     # return ret_list
+
+if __name__ == "__main__":
+    print('Corpus module')

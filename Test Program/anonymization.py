@@ -29,3 +29,6 @@ def text_anonymization(processed_list, anonymization_type):
         return processed_list
     else:
         return 'to be defined'
+
+if __name__ == "__main__":
+    print('Anonymization module')

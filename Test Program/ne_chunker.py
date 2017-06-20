@@ -97,3 +97,6 @@ class NamedEntityChunker(ChunkParserI):
         """
         X_test, y_test = self.__class__.to_dataset(parsed_sentences, self._feature_detector)
         return self._classifier.score(X_test, y_test)
+
+if __name__ == "__main__":
+    print('NE_Chunker module')

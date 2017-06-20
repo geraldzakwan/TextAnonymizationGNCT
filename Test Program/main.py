@@ -36,4 +36,5 @@ def train_perceptron():
     # print "Accuracy:", accuracy
     # 0.970327096314
 
-train_perceptron()
+if __name__ == "__main__":
+    train_perceptron()

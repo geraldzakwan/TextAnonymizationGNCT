@@ -83,3 +83,6 @@ def ner_features(tokens, index, history):
     }
 
     return feat_dict
+
+if __name__ == "__main__":
+    print('Feature module')
