@@ -24,9 +24,9 @@ def train_perceptron():
                    'B-art', 'I-art', 'B-eve', 'I-eve', 'B-nat', 'I-nat']
 
     pa_ner = ne_chunker.NamedEntityChunker.train(itertools.islice(reader, 50000), feature_detector=feature.ner_features,
-                                                   all_classes=all_classes, batch_size=5000, n_iter=5)
+                                                   all_classes=all_classes, batch_size=1000, n_iter=5)
 
-    accuracy = pa_ner.score(itertools.islice(reader, 5000))
+    accuracy = pa_ner.score(itertools.islice(reader, 1000))
 
     print "Accuracy:", accuracy # 0.970327096314
 
