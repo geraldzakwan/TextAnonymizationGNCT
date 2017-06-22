@@ -8,6 +8,7 @@ from sklearn.pipeline import Pipeline
 from nltk.chunk import conlltags2tree, tree2conlltags
 
 from sklearn.externals import joblib
+from sklearn.naive_bayes import MultinomialNB
 
 class NamedEntityChunker(ChunkParserI):
 
@@ -33,7 +34,7 @@ class NamedEntityChunker(ChunkParserI):
         return X, y
 
     @classmethod
-    def get_minibatch(cls, parsed_sentences, feature_detector, batch_size=500):
+    def get_minibatch(cls, parsed_sentences, feature_detector, batch_size=1000):
         batch = list(itertools.islice(parsed_sentences, batch_size))
         X, y = cls.to_dataset(batch, feature_detector)
         return X, y
@@ -45,7 +46,7 @@ class NamedEntityChunker(ChunkParserI):
 
     @classmethod
     def train(cls, parsed_sentences, feature_detector, all_classes, **kwargs):
-        X, y = cls.get_minibatch(parsed_sentences, feature_detector, kwargs.get('batch_size', 500))
+        X, y = cls.get_minibatch(parsed_sentences, feature_detector, kwargs.get('batch_size', 1000))
         vectorizer = DictVectorizer(sparse=False)
         vectorizer.fit(X)
 
@@ -54,17 +55,35 @@ class NamedEntityChunker(ChunkParserI):
         while len(X):
             X = vectorizer.transform(X)
             clf.partial_fit(X, y, all_classes)
-            X, y = cls.get_minibatch(parsed_sentences, feature_detector, kwargs.get('batch_size', 500))
+            X, y = cls.get_minibatch(parsed_sentences, feature_detector, kwargs.get('batch_size', 1000))
 
         clf = Pipeline([
             ('vectorizer', vectorizer),
             ('classifier', clf)
         ])
 
-        joblib.dump(clf, 'test_model', compress = 9)
-
         return cls(clf, feature_detector)
 
+    @classmethod
+    def train_naive_bayes(cls, parsed_sentences, feature_detector, all_classes, **kwargs):
+        X, y = cls.get_minibatch(parsed_sentences, feature_detector, kwargs.get('batch_size', 1000))
+        vectorizer = DictVectorizer(sparse=False)
+        vectorizer.fit(X)
+
+        clf = MultinomialNB()
+
+        while len(X):
+            X = vectorizer.transform(X)
+            clf.partial_fit(X, y, all_classes)
+            X, y = cls.get_minibatch(parsed_sentences, feature_detector, kwargs.get('batch_size', 1000))
+
+        clf = Pipeline([
+            ('vectorizer', vectorizer),
+            ('classifier', clf)
+        ])
+
+        return cls(clf, feature_detector)
+s
     def __init__(self, classifier, feature_detector):
         self._classifier = classifier
         self._feature_detector = feature_detector
