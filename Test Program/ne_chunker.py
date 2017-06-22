@@ -45,7 +45,7 @@ class NamedEntityChunker(ChunkParserI):
         return cls(clf, feature_detector)
 
     @classmethod
-    def train(cls, parsed_sentences, feature_detector, all_classes, **kwargs):
+    def train(cls, parsed_sentences, feature_detector, all_classes, filename, **kwargs):
         X, y = cls.get_minibatch(parsed_sentences, feature_detector, kwargs.get('batch_size', 1000))
         vectorizer = DictVectorizer(sparse=False)
         vectorizer.fit(X)
@@ -62,12 +62,12 @@ class NamedEntityChunker(ChunkParserI):
             ('classifier', clf)
         ])
 
-        joblib.dump(clf, 'test_model')
+        joblib.dump(clf, filename)
 
         return cls(clf, feature_detector)
 
     @classmethod
-    def train_naive_bayes(cls, parsed_sentences, feature_detector, all_classes, **kwargs):
+    def train_naive_bayes(cls, parsed_sentences, feature_detector, all_classes, filename, **kwargs):
         X, y = cls.get_minibatch(parsed_sentences, feature_detector, kwargs.get('batch_size', 1000))
         vectorizer = DictVectorizer(sparse=False)
         vectorizer.fit(X)
@@ -83,6 +83,8 @@ class NamedEntityChunker(ChunkParserI):
             ('vectorizer', vectorizer),
             ('classifier', clf)
         ])
+
+        joblib.dump(clf, filename)
 
         return cls(clf, feature_detector)
 

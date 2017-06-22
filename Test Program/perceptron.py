@@ -20,23 +20,23 @@ mode = '--core'
 # Generator result
 reader = corpus.read_corpus_ner(corpus_root, mode)
 
-def train_perceptron(sample):
+def train_perceptron(sample, filename):
     all_classes = ['O', 'B-per', 'I-per', 'B-gpe', 'I-gpe',
                    'B-geo', 'I-geo', 'B-org', 'I-org', 'B-tim', 'I-tim',
                    'B-art', 'I-art', 'B-eve', 'I-eve', 'B-nat', 'I-nat']
 
     pa_ner = ne_chunker.NamedEntityChunker.train(itertools.islice(reader, sample), feature_detector=feature.ner_features,
-                                                   all_classes=all_classes, batch_size=1000, n_iter=5)
+                                                   all_classes=all_classes, filename=filename, batch_size=1000, n_iter=5)
 
     return pa_ner
 
-def train_naive_bayes(sample):
+def train_naive_bayes(sample, filename):
     all_classes = ['O', 'B-per', 'I-per', 'B-gpe', 'I-gpe',
                    'B-geo', 'I-geo', 'B-org', 'I-org', 'B-tim', 'I-tim',
                    'B-art', 'I-art', 'B-eve', 'I-eve', 'B-nat', 'I-nat']
 
     pa_ner = ne_chunker.NamedEntityChunker.train_naive_bayes(itertools.islice(reader, sample), feature_detector=feature.ner_features,
-                                                   all_classes=all_classes, batch_size=1000, n_iter=5)
+                                                   all_classes=all_classes, filename=filename, batch_size=1000, n_iter=5)
 
     return pa_ner
 
