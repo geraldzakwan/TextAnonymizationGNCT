@@ -62,6 +62,8 @@ class NamedEntityChunker(ChunkParserI):
             ('classifier', clf)
         ])
 
+        joblib.dump(clf, 'test_model')
+
         return cls(clf, feature_detector)
 
     @classmethod
@@ -83,7 +85,7 @@ class NamedEntityChunker(ChunkParserI):
         ])
 
         return cls(clf, feature_detector)
-s
+
     def __init__(self, classifier, feature_detector):
         self._classifier = classifier
         self._feature_detector = feature_detector

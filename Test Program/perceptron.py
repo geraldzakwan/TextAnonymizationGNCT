@@ -43,18 +43,19 @@ def train_naive_bayes(sample):
 def save_perceptron(cls, model_name):
     joblib.dump(cls, model_name, compress=9)
 
-def load_perceptron(model_name):
+def load(model_name):
     pa_ner = ne_chunker.NamedEntityChunker.load(model_name, feature.ner_features)
     return pa_ner
 
 def classify(cls, text):
     if(text == 'default'):
         text = "Cristiano Ronaldo is a decent footballer both in Real Madrid, Spain and Manchester United, United Kingdom. He is truly a masterpiece."
-    print(cls.parse(pos_tag(word_tokenize(text))))
+    return (cls.parse(pos_tag(word_tokenize(text))))
 
 def calculate_accuracy(cls, sample):
     accuracy = cls.score(itertools.islice(reader, sample))
-    print ("Accuracy:", accuracy)
+    return accuracy
+    # print ("Accuracy:", accuracy)
     # 0.970327096314
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 Test Program/gmb-2.2.0/*
 Test Program/*.pyc
-Test Program/*_train_data
+Test Program/*_train_data_*
+Test Program/test_model
 Log_Act/*
 Dokumentasi_KP/*
 
