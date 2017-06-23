@@ -10,6 +10,8 @@ from nltk.chunk import conlltags2tree, tree2conlltags
 from sklearn.externals import joblib
 from sklearn.naive_bayes import MultinomialNB
 
+batch_size_per_iter = 250
+
 class NamedEntityChunker(ChunkParserI):
 
     @classmethod
@@ -34,7 +36,7 @@ class NamedEntityChunker(ChunkParserI):
         return X, y
 
     @classmethod
-    def get_minibatch(cls, parsed_sentences, feature_detector, batch_size=1000):
+    def get_minibatch(cls, parsed_sentences, feature_detector, batch_size=batch_size_per_iter):
         batch = list(itertools.islice(parsed_sentences, batch_size))
         X, y = cls.to_dataset(batch, feature_detector)
         return X, y
@@ -46,7 +48,7 @@ class NamedEntityChunker(ChunkParserI):
 
     @classmethod
     def train(cls, parsed_sentences, feature_detector, all_classes, filename, **kwargs):
-        X, y = cls.get_minibatch(parsed_sentences, feature_detector, kwargs.get('batch_size', 1000))
+        X, y = cls.get_minibatch(parsed_sentences, feature_detector, kwargs.get('batch_size', batch_size_per_iter))
         vectorizer = DictVectorizer(sparse=False)
         vectorizer.fit(X)
 
@@ -55,7 +57,7 @@ class NamedEntityChunker(ChunkParserI):
         while len(X):
             X = vectorizer.transform(X)
             clf.partial_fit(X, y, all_classes)
-            X, y = cls.get_minibatch(parsed_sentences, feature_detector, kwargs.get('batch_size', 1000))
+            X, y = cls.get_minibatch(parsed_sentences, feature_detector, kwargs.get('batch_size', batch_size_per_iter))
 
         clf = Pipeline([
             ('vectorizer', vectorizer),
@@ -68,7 +70,7 @@ class NamedEntityChunker(ChunkParserI):
 
     @classmethod
     def train_naive_bayes(cls, parsed_sentences, feature_detector, all_classes, filename, **kwargs):
-        X, y = cls.get_minibatch(parsed_sentences, feature_detector, kwargs.get('batch_size', 1000))
+        X, y = cls.get_minibatch(parsed_sentences, feature_detector, kwargs.get('batch_size', batch_size_per_iter))
         vectorizer = DictVectorizer(sparse=False)
         vectorizer.fit(X)
 
@@ -77,7 +79,7 @@ class NamedEntityChunker(ChunkParserI):
         while len(X):
             X = vectorizer.transform(X)
             clf.partial_fit(X, y, all_classes)
-            X, y = cls.get_minibatch(parsed_sentences, feature_detector, kwargs.get('batch_size', 1000))
+            X, y = cls.get_minibatch(parsed_sentences, feature_detector, kwargs.get('batch_size', batch_size_per_iter))
 
         clf = Pipeline([
             ('vectorizer', vectorizer),
